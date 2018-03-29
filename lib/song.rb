@@ -26,6 +26,7 @@ class Song
     @@all.detect do |song|
       song.name == name 
     end
+    song.name
   end
   
   def self.find_or_create_by_name(name)
