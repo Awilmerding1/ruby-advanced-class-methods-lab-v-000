@@ -11,18 +11,23 @@ class Song
   end
   
   def self.create
-    self.new.tap{|song| song.save}
+  self.all << self.new
+  self.all[-1]
   end
   
   def self.new_by_name(song_name)
-   new_song = self.new 
+    new_song = self.new 
     @name = song_name
     new_song.name = @name
     return new_song
   end
   
   def self.create_by_name(song_name)
-    self.new_by_name(song_name).tap{|song| song.save}
+    @name = song_name
+    new_song = self.new 
+    new_song.name = @name
+    self.all << new_song
+    @@all[-1]
   end
   
   def self.find_by_name(name)
@@ -34,13 +39,23 @@ class Song
   def self.find_or_create_by_name(name)
     if self.find_by_name(name)
       self.find_by_name(name)
-    else 
-      self.create_by_name(name)
+    else self.create_by_name(name)
     end
   end
   
   def self.alphabetical
-    @@all.sort_by{|song| song.name}
+    array = []
+    array_two = []
+    self.all.map do |song|
+    array << song.name
+    end
+    sorted = array.sort do |a, b|
+      a <=> b 
+    end 
+    sorted.map do |name|
+     array_two << find_by_name(name)
+  end
+  array_two
 end
   
   def self.new_from_filename(file_name)
